@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { Sun, Cloud, CloudRain, CloudSnow, Wind, CloudLightning, AlertCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
 
 interface WeatherData {
   temp: number;
@@ -28,7 +29,7 @@ const Weather = ({ className }: WeatherProps) => {
         const lat = 35.7796;
         const lon = -78.6382;
         
-        // API key may have expired, using a mock response as fallback
+        // Mock weather data as fallback
         const mockWeatherData = {
           temp: 72,
           condition: "Clear",
@@ -38,30 +39,32 @@ const Weather = ({ className }: WeatherProps) => {
         try {
           // Create an AbortController for timeout functionality
           const controller = new AbortController();
-          const timeoutId = setTimeout(() => controller.abort(), 5000);
+          const timeoutId = setTimeout(() => controller.abort(), 8000);
           
-          const response = await fetch(
-            `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=6ef7f04ad106957b8936ba87544ca187&units=imperial`,
-            { signal: controller.signal }
-          );
+          // Call our Supabase Edge Function
+          const { data, error } = await supabase.functions.invoke('get-weather', {
+            body: { lat, lon },
+          });
           
           // Clear the timeout since fetch completed
           clearTimeout(timeoutId);
           
-          if (!response.ok) {
+          if (error) {
+            console.error("Supabase function error:", error);
             throw new Error("Weather data not available");
           }
           
-          const data = await response.json();
-          setWeather({
-            temp: Math.round(data.main.temp),
-            condition: data.weather[0].main,
-            icon: data.weather[0].icon
-          });
+          // Set weather data from the Edge Function response
+          setWeather(data);
         } catch (apiError) {
-          console.error("API Error, using mock data:", apiError);
+          console.error("Weather API Error, using mock data:", apiError);
           // Use mock data instead of failing
           setWeather(mockWeatherData);
+          toast({
+            title: "Weather Notice",
+            description: "Using cached weather data. Will try again later.",
+            variant: "default",
+          });
         }
       } catch (err) {
         console.error("Error in weather component:", err);
