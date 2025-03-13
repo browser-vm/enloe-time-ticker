@@ -1,4 +1,3 @@
-
 import { Period, Schedule, TimeInfo } from "@/types/schedule";
 
 // Convert a time string (HH:MM) to milliseconds since midnight
@@ -135,15 +134,44 @@ export const schedules: Record<string, Schedule> = {
   }
 };
 
-// Calculate time until school starts (7:25 AM)
+// Calculate time until next school day
 export const getTimeUntilSchool = (): number | null => {
-  if (!isSchoolDay()) return null;
-  
+  const now = new Date();
+  const currentDay = now.getDay();
   const currentTimeMs = getCurrentTimeMs();
-  const schoolStartMs = timeToMs("7:25");
   
-  if (currentTimeMs < schoolStartMs) {
-    return schoolStartMs - currentTimeMs;
+  // If it's a school day and current time is before school starts
+  if (isSchoolDay() && currentTimeMs < timeToMs("7:25")) {
+    return timeToMs("7:25") - currentTimeMs;
+  }
+  
+  // If it's Friday after school or weekend, calculate time until Monday
+  let daysUntilNextSchoolDay = 0;
+  
+  if (currentDay === 5 && currentTimeMs > timeToMs("14:20")) {
+    // Friday after school ends - next school day is Monday (3 days away)
+    daysUntilNextSchoolDay = 3;
+  } else if (currentDay === 6) {
+    // Saturday - next school day is Monday (2 days away)
+    daysUntilNextSchoolDay = 2;
+  } else if (currentDay === 0) {
+    // Sunday - next school day is Monday (1 day away)
+    daysUntilNextSchoolDay = 1;
+  } else if (currentDay >= 1 && currentDay <= 4 && currentTimeMs > timeToMs("14:20")) {
+    // Monday-Thursday after school - next school day is tomorrow
+    daysUntilNextSchoolDay = 1;
+  } else if (currentDay >= 1 && currentDay <= 5 && currentTimeMs <= timeToMs("14:20")) {
+    // During school hours - no time until school since we're in school
+    return null;
+  }
+  
+  if (daysUntilNextSchoolDay > 0) {
+    // Calculate milliseconds until next school day at 7:25 AM
+    const nextSchoolDay = new Date(now);
+    nextSchoolDay.setDate(now.getDate() + daysUntilNextSchoolDay);
+    nextSchoolDay.setHours(7, 25, 0, 0);
+    
+    return nextSchoolDay.getTime() - now.getTime();
   }
   
   return null;

@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { 
   getCurrentTimeInfo, 
@@ -12,14 +11,14 @@ import { cn } from "@/lib/utils";
 import TimeCard from "@/components/TimeCard";
 import ScheduleToggle from "@/components/ScheduleToggle";
 import { ThemeToggle } from "@/components/ThemeToggle";
-import { Clock, Calendar } from "lucide-react";
+import Weather from "@/components/Weather";
+import { Clock, Calendar, School } from "lucide-react";
 
 const Index = () => {
   const [scheduleType, setScheduleType] = useState<"aLunch" | "bLunch">("aLunch");
   const [timeInfo, setTimeInfo] = useState(() => getCurrentTimeInfo(schedules[scheduleType]));
   const [currentTime, setCurrentTime] = useState(new Date());
   
-  // Load saved schedule preference
   useEffect(() => {
     const savedSchedule = localStorage.getItem("enloeScheduleType");
     if (savedSchedule === "aLunch" || savedSchedule === "bLunch") {
@@ -27,12 +26,10 @@ const Index = () => {
     }
   }, []);
   
-  // Save schedule preference
   useEffect(() => {
     localStorage.setItem("enloeScheduleType", scheduleType);
   }, [scheduleType]);
   
-  // Update time every second
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentTime(new Date());
@@ -60,16 +57,23 @@ const Index = () => {
           </div>
         </div>
         
-        <div className="flex items-center space-x-2 text-enloe-green dark:text-enloe-yellow mt-4 animate-slide-up" style={{ animationDelay: '0.2s' }}>
-          <Clock className="h-4 w-4" />
-          <span className="text-sm font-medium">
-            {currentTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })}
-          </span>
-          <span className="mx-2 text-gray-300 dark:text-gray-700">|</span>
-          <Calendar className="h-4 w-4" />
-          <span className="text-sm font-medium">
-            {currentTime.toLocaleDateString([], { weekday: 'long', month: 'short', day: 'numeric' })}
-          </span>
+        <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-4 text-enloe-green dark:text-enloe-yellow mt-4 animate-slide-up" style={{ animationDelay: '0.2s' }}>
+          <div className="flex items-center space-x-2">
+            <Clock className="h-4 w-4" />
+            <span className="text-sm font-medium">
+              {currentTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })}
+            </span>
+            <span className="mx-2 text-gray-300 dark:text-gray-700">|</span>
+            <Calendar className="h-4 w-4" />
+            <span className="text-sm font-medium">
+              {currentTime.toLocaleDateString([], { weekday: 'long', month: 'short', day: 'numeric' })}
+            </span>
+          </div>
+          
+          <div className="flex items-center mt-2 sm:mt-0">
+            <span className="mx-2 text-gray-300 dark:text-gray-700 hidden sm:block">|</span>
+            <Weather />
+          </div>
         </div>
         
         <ScheduleToggle 
@@ -90,10 +94,25 @@ const Index = () => {
           <div className="col-span-full glass-card p-10 text-center animate-scale-in">
             <h2 className="text-2xl font-bold timer-text enloe-gradient-text mb-2">School Day Complete</h2>
             <p className="text-gray-600 dark:text-gray-400">Classes are over for today. See you tomorrow!</p>
+            
+            {timeUntilSchool && (
+              <div className="mt-6">
+                <div className="flex items-center justify-center space-x-2 mb-2">
+                  <School className="h-5 w-5 text-enloe-green dark:text-enloe-yellow" />
+                  <h3 className="text-lg font-medium">Next School Day</h3>
+                </div>
+                <div className="text-4xl font-bold mt-2 timer-text enloe-yellow-gradient-text">
+                  {formatTimeLong(timeUntilSchool)}
+                </div>
+              </div>
+            )}
           </div>
         ) : timeUntilSchool ? (
           <div className="col-span-full glass-card p-10 text-center animate-scale-in">
-            <h2 className="text-2xl font-bold timer-text enloe-gradient-text mb-2">School Starts Soon</h2>
+            <div className="flex items-center justify-center space-x-2">
+              <School className="h-6 w-6 text-enloe-green dark:text-enloe-yellow" />
+              <h2 className="text-2xl font-bold timer-text enloe-gradient-text">School Starts Soon</h2>
+            </div>
             <div className="text-4xl font-bold mt-4 timer-text enloe-yellow-gradient-text">
               {formatTimeLong(timeUntilSchool)}
             </div>
@@ -102,7 +121,6 @@ const Index = () => {
         ) : (
           <>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {/* Current Period Card */}
               <TimeCard
                 title="Current Period"
                 time={timeInfo.timeRemainingInPeriod ? formatTimeMS(timeInfo.timeRemainingInPeriod) : "Break"}
@@ -114,7 +132,6 @@ const Index = () => {
                 style={{ animationDelay: '0.1s' }}
               />
               
-              {/* Next Period Card */}
               <TimeCard
                 title="Next Period"
                 time={timeInfo.timeUntilNextPeriod ? formatTimeMS(timeInfo.timeUntilNextPeriod) : "N/A"}
@@ -125,7 +142,6 @@ const Index = () => {
               />
             </div>
             
-            {/* Schedule Overview */}
             <div className="glass-card p-6 mt-4 animate-scale-in" style={{ animationDelay: '0.3s' }}>
               <h3 className="text-sm font-medium uppercase tracking-wider text-enloe-green/80 dark:text-enloe-yellow/80 mb-4">
                 {scheduleType === "aLunch" ? "A-Lunch Schedule" : "B-Lunch Schedule"}
