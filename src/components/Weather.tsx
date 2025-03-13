@@ -36,10 +36,17 @@ const Weather = ({ className }: WeatherProps) => {
         };
         
         try {
+          // Create an AbortController for timeout functionality
+          const controller = new AbortController();
+          const timeoutId = setTimeout(() => controller.abort(), 5000);
+          
           const response = await fetch(
-            `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=6ef7f04ad106957b8936ba87544ca187&units=imperial`, 
-            { timeout: 5000 } // Add timeout to prevent long loading
+            `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=6ef7f04ad106957b8936ba87544ca187&units=imperial`,
+            { signal: controller.signal }
           );
+          
+          // Clear the timeout since fetch completed
+          clearTimeout(timeoutId);
           
           if (!response.ok) {
             throw new Error("Weather data not available");
