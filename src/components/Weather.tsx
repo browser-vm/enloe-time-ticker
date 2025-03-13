@@ -26,7 +26,7 @@ const Weather = ({ className }: WeatherProps) => {
         const lat = 35.7796;
         const lon = -78.6382;
         const response = await fetch(
-          `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=8c5628655af5c5d71f14e0edd8d1d2e8&units=imperial`
+          `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=6ef7f04ad106957b8936ba87544ca187&units=imperial`
         );
         
         if (!response.ok) {
