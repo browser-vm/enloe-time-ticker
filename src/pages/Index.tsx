@@ -11,6 +11,7 @@ import {
 import { cn } from "@/lib/utils";
 import TimeCard from "@/components/TimeCard";
 import ScheduleToggle from "@/components/ScheduleToggle";
+import { ThemeToggle } from "@/components/ThemeToggle";
 import { Clock, Calendar } from "lucide-react";
 
 const Index = () => {
@@ -45,22 +46,26 @@ const Index = () => {
   const schoolOver = isSchoolOver(schedules[scheduleType]);
   
   return (
-    <div className="min-h-screen flex flex-col items-center bg-gradient-to-b from-enloe-light to-gray-100">
+    <div className="min-h-screen flex flex-col items-center bg-gradient-to-b from-enloe-light to-gray-100 dark:from-enloe-dark dark:to-gray-900">
       <header className="w-full py-6 px-4 flex flex-col items-center justify-center animate-fade-in">
-        <div className="w-full max-w-md flex items-center justify-center mb-2">
+        <div className="w-full max-w-md flex items-center justify-between mb-2">
+          <div className="flex-1"></div>
           <img 
             src="/lovable-uploads/6974e9ed-1c55-4c89-b264-f6e36225f32c.png" 
             alt="Enloe Time Logo" 
             className="h-20 md:h-24 object-contain"
           />
+          <div className="flex-1 flex justify-end">
+            <ThemeToggle className="text-enloe-dark dark:text-enloe-light" />
+          </div>
         </div>
         
-        <div className="flex items-center space-x-2 text-enloe-green mt-4 animate-slide-up" style={{ animationDelay: '0.2s' }}>
+        <div className="flex items-center space-x-2 text-enloe-green dark:text-enloe-yellow mt-4 animate-slide-up" style={{ animationDelay: '0.2s' }}>
           <Clock className="h-4 w-4" />
           <span className="text-sm font-medium">
             {currentTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })}
           </span>
-          <span className="mx-2 text-gray-300">|</span>
+          <span className="mx-2 text-gray-300 dark:text-gray-700">|</span>
           <Calendar className="h-4 w-4" />
           <span className="text-sm font-medium">
             {currentTime.toLocaleDateString([], { weekday: 'long', month: 'short', day: 'numeric' })}
@@ -79,12 +84,12 @@ const Index = () => {
         {!timeInfo.isSchoolDay ? (
           <div className="col-span-full glass-card p-10 text-center animate-scale-in">
             <h2 className="text-2xl font-bold timer-text enloe-gradient-text mb-2">Weekend</h2>
-            <p className="text-gray-600">No school today. Enjoy your day!</p>
+            <p className="text-gray-600 dark:text-gray-400">No school today. Enjoy your day!</p>
           </div>
         ) : schoolOver ? (
           <div className="col-span-full glass-card p-10 text-center animate-scale-in">
             <h2 className="text-2xl font-bold timer-text enloe-gradient-text mb-2">School Day Complete</h2>
-            <p className="text-gray-600">Classes are over for today. See you tomorrow!</p>
+            <p className="text-gray-600 dark:text-gray-400">Classes are over for today. See you tomorrow!</p>
           </div>
         ) : timeUntilSchool ? (
           <div className="col-span-full glass-card p-10 text-center animate-scale-in">
@@ -92,7 +97,7 @@ const Index = () => {
             <div className="text-4xl font-bold mt-4 timer-text enloe-yellow-gradient-text">
               {formatTimeLong(timeUntilSchool)}
             </div>
-            <p className="text-gray-600 mt-2">Until school starts</p>
+            <p className="text-gray-600 dark:text-gray-400 mt-2">Until school starts</p>
           </div>
         ) : (
           <>
@@ -122,7 +127,7 @@ const Index = () => {
             
             {/* Schedule Overview */}
             <div className="glass-card p-6 mt-4 animate-scale-in" style={{ animationDelay: '0.3s' }}>
-              <h3 className="text-sm font-medium uppercase tracking-wider text-enloe-green/80 mb-4">
+              <h3 className="text-sm font-medium uppercase tracking-wider text-enloe-green/80 dark:text-enloe-yellow/80 mb-4">
                 {scheduleType === "aLunch" ? "A-Lunch Schedule" : "B-Lunch Schedule"}
               </h3>
               
@@ -133,13 +138,13 @@ const Index = () => {
                     className={cn(
                       "p-3 rounded-lg transition-all duration-300",
                       timeInfo.currentPeriod?.name === period.name 
-                        ? "bg-enloe-green/10 border border-enloe-yellow/30" 
-                        : "bg-white/50"
+                        ? "bg-enloe-green/10 dark:bg-enloe-green/20 border border-enloe-yellow/30" 
+                        : "bg-white/50 dark:bg-white/5"
                     )}
                   >
                     <div className="flex justify-between items-center">
                       <span className="font-medium">{period.name}</span>
-                      <span className="text-gray-500 text-sm">
+                      <span className="text-gray-500 dark:text-gray-400 text-sm">
                         {period.startTime} - {period.endTime}
                       </span>
                     </div>
@@ -162,7 +167,7 @@ const Index = () => {
         )}
       </main>
       
-      <footer className="w-full py-4 text-center text-sm text-gray-500">
+      <footer className="w-full py-4 text-center text-sm text-gray-500 dark:text-gray-400">
         <p>Enloe Time Ticker © 2025 Alex Scott</p>
       </footer>
     </div>
