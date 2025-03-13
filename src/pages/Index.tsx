@@ -163,7 +163,7 @@ const Index = () => {
       </main>
       
       <footer className="w-full py-4 text-center text-sm text-gray-500">
-        <p>Enloe Time Ticker © 2024</p>
+        <p>Enloe Time Ticker © 2025 Alex Scott</p>
       </footer>
     </div>
   );
