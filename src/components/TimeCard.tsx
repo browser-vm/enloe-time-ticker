@@ -11,6 +11,7 @@ interface TimeCardProps {
   progress?: number;
   className?: string;
   isActive?: boolean;
+  style?: React.CSSProperties;
 }
 
 const TimeCard = ({
@@ -21,6 +22,7 @@ const TimeCard = ({
   progress = 0,
   className,
   isActive = false,
+  style,
 }: TimeCardProps) => {
   const [mounted, setMounted] = useState(false);
 
@@ -42,6 +44,7 @@ const TimeCard = ({
         mounted ? "opacity-100 transform-none" : "opacity-0 translate-y-4",
         className
       )}
+      style={style}
     >
       <div className="space-y-2">
         <h3 className={cn(

@@ -6,9 +6,10 @@ interface ScheduleToggleProps {
   scheduleType: "aLunch" | "bLunch";
   onChange: (value: "aLunch" | "bLunch") => void;
   className?: string;
+  style?: React.CSSProperties;
 }
 
-const ScheduleToggle = ({ scheduleType, onChange, className }: ScheduleToggleProps) => {
+const ScheduleToggle = ({ scheduleType, onChange, className, style }: ScheduleToggleProps) => {
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -20,7 +21,7 @@ const ScheduleToggle = ({ scheduleType, onChange, className }: ScheduleTogglePro
   }
 
   return (
-    <div className={cn("flex items-center justify-center space-x-2 p-2", className)}>
+    <div className={cn("flex items-center justify-center space-x-2 p-2", className)} style={style}>
       <button
         onClick={() => onChange("aLunch")}
         className={cn(

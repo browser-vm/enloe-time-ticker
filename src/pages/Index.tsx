@@ -8,6 +8,7 @@ import {
   isSchoolOver,
   getTimeUntilSchool
 } from "@/utils/timeUtils";
+import { cn } from "@/lib/utils";
 import TimeCard from "@/components/TimeCard";
 import ScheduleToggle from "@/components/ScheduleToggle";
 import { Clock, Calendar } from "lucide-react";
