@@ -14,7 +14,8 @@ import ScheduleToggle from "@/components/ScheduleToggle";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import Weather from "@/components/Weather";
 import { ChatButton } from "@/components/ChatButton";
-import { Clock, Calendar, School } from "lucide-react";
+import { Clock, Calendar, School, Heart } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 const Index = () => {
   const [scheduleType, setScheduleType] = useState<"aLunch" | "bLunch">("aLunch");
@@ -186,7 +187,23 @@ const Index = () => {
       </main>
       
       <footer className="w-full py-4 text-center text-sm text-gray-500 dark:text-gray-400">
-        <p>Enloe Time Ticker © 2025 Alex Scott</p>
+        <div className="flex flex-col items-center justify-center space-y-3">
+          <a 
+            href="https://paypal.me/enloetime" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="inline-block"
+          >
+            <Button 
+              variant="outline" 
+              className="bg-[#0070ba] hover:bg-[#003087] text-white border-[#0070ba] hover:border-[#003087] flex items-center gap-2"
+            >
+              <Heart className="h-4 w-4" />
+              PayPal Me
+            </Button>
+          </a>
+          <p>Enloe Time Ticker © 2025 Alex Scott</p>
+        </div>
       </footer>
       
       {/* Add the ChatButton component */}
