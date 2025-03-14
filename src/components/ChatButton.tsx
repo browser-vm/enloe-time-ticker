@@ -98,7 +98,7 @@ export const ChatButton = () => {
                 <div className="flex flex-col items-center justify-center h-full text-center opacity-70">
                   <MessageCircle className="h-12 w-12 mb-4 text-enloe-green dark:text-enloe-yellow" />
                   <p className="max-w-xs">
-                    Hi! I'm the Enloe Assistant. Ask me anything about school schedules or activities!
+                    Hi! I'm the Enloe Assistant. Ask me anything! (I don't have access to the web... yet!)
                   </p>
                 </div>
               ) : (
