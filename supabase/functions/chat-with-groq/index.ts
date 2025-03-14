@@ -37,11 +37,11 @@ serve(async (req) => {
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
-        model: "llama3-8b-8192",
+        model: "gemma2-9b-it",
         messages: [
           {
             role: "system",
-            content: "You are Enloe Assistant, a helpful AI assistant for Enloe High School students. You provide concise, accurate information about school schedules, activities, and general academic questions. Keep responses brief and focused on helping students."
+            content: "You are Enloe Assistant, a helpful AI assistant for Enloe High School students. You provide concise, accurate information about general academic questions. Keep responses brief and focused on helping students."
           },
           ...messages
         ],
