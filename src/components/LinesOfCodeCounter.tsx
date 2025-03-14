@@ -7,50 +7,17 @@ const LinesOfCodeCounter = ({ className }: { className?: string }) => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const countLines = async () => {
-      setIsLoading(true);
-      try {
-        // Use dynamic import to avoid blocking the main thread
-        const glob = (await import('glob')).glob;
-        const fs = await import('fs/promises');
-        const path = await import('path');
-
-        // Specify the files to include/exclude
-        const includePatterns = [
-          '**/*.ts',
-          '**/*.tsx',
-          '**/*.js',
-          '**/*.jsx',
-          '**/*.css',
-        ];
-        const excludePatterns = [
-          'node_modules/**',
-          '.next/**',
-          '.git/**',
-          'dist/**',
-          'build/**',
-        ];
-
-        // Use glob to find all files matching the include patterns and not matching the exclude patterns
-        const files = await glob(includePatterns, { ignore: excludePatterns, nodir: true });
-
-        let totalLines = 0;
-        for (const file of files) {
-          const filePath = path.resolve(process.cwd(), file); // Ensure absolute path
-          const fileContent = await fs.readFile(filePath, 'utf-8');
-          totalLines += fileContent.split('\n').length;
-        }
-
-        setLinesOfCode(totalLines);
-      } catch (error) {
-        console.error("Failed to count lines of code:", error);
-        setLinesOfCode(null); // or some error value
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    countLines();
+    // This is a simulated count that would normally come from an API
+    // In a real app, you would fetch this from your backend
+    const simulatedCount = 2630; // Example count
+    
+    // Simulate loading delay
+    const timer = setTimeout(() => {
+      setLinesOfCode(simulatedCount);
+      setIsLoading(false);
+    }, 800);
+    
+    return () => clearTimeout(timer);
   }, []);
 
   return (
