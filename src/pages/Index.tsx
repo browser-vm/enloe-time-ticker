@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { 
   getCurrentTimeInfo, 
@@ -12,6 +13,7 @@ import TimeCard from "@/components/TimeCard";
 import ScheduleToggle from "@/components/ScheduleToggle";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import Weather from "@/components/Weather";
+import { ChatButton } from "@/components/ChatButton";
 import { Clock, Calendar, School } from "lucide-react";
 
 const Index = () => {
@@ -186,6 +188,9 @@ const Index = () => {
       <footer className="w-full py-4 text-center text-sm text-gray-500 dark:text-gray-400">
         <p>Enloe Time Ticker © 2025 Alex Scott</p>
       </footer>
+      
+      {/* Add the ChatButton component */}
+      <ChatButton />
     </div>
   );
 };
