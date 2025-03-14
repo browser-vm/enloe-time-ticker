@@ -14,7 +14,7 @@ import ScheduleToggle from "@/components/ScheduleToggle";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import Weather from "@/components/Weather";
 import { ChatButton } from "@/components/ChatButton";
-import { Clock, Calendar, School, Heart } from "lucide-react";
+import { Clock, Calendar, School, Coffee } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const Index = () => {
@@ -189,17 +189,17 @@ const Index = () => {
       <footer className="w-full py-4 text-center text-sm text-gray-500 dark:text-gray-400">
         <div className="flex flex-col items-center justify-center space-y-3">
           <a 
-            href="https://paypal.me/enloetime" 
+            href="https://ko-fi.com/enloetime" 
             target="_blank" 
             rel="noopener noreferrer"
             className="inline-block"
           >
             <Button 
               variant="outline" 
-              className="bg-[#0070ba] hover:bg-[#003087] text-white border-[#0070ba] hover:border-[#003087] flex items-center gap-2"
+              className="bg-[#29abe0] hover:bg-[#12759d] text-white border-[#29abe0] hover:border-[#12759d] flex items-center gap-2"
             >
-              <Heart className="h-4 w-4" />
-              PayPal Me
+              <Coffee className="h-4 w-4" />
+              Buy me a coffee
             </Button>
           </a>
           <p>Enloe Time Ticker © 2025 Alex Scott</p>
