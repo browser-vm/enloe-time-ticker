@@ -15,6 +15,7 @@ import ScheduleToggle from "@/components/ScheduleToggle";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import Weather from "@/components/Weather";
 import { ChatButton } from "@/components/ChatButton";
+import LinesOfCodeCounter from "@/components/LinesOfCodeCounter";
 import { Clock, Calendar, School, Coffee } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
@@ -206,7 +207,11 @@ const Index = () => {
               Buy me a coffee
             </Button>
           </a>
-          <p>Enloe Time Ticker © 2025 Alex Scott</p>
+          <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-4">
+            <LinesOfCodeCounter />
+            <span className="hidden sm:inline">•</span>
+            <p>Enloe Time Ticker © 2025 Alex Scott</p>
+          </div>
         </div>
       </footer>
       
