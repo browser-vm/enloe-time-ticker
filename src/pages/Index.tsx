@@ -6,7 +6,8 @@ import {
   formatTimeLong, 
   schedules, 
   isSchoolOver,
-  getTimeUntilSchool
+  getTimeUntilSchool,
+  isWeekend
 } from "@/utils/timeUtils";
 import { cn } from "@/lib/utils";
 import TimeCard from "@/components/TimeCard";
@@ -44,6 +45,7 @@ const Index = () => {
   
   const timeUntilSchool = getTimeUntilSchool();
   const schoolOver = isSchoolOver(schedules[scheduleType]);
+  const weekend = isWeekend();
   
   return (
     <div className="min-h-screen flex flex-col items-center bg-gradient-to-b from-enloe-light to-gray-100 dark:from-enloe-dark dark:to-gray-900">
@@ -91,7 +93,9 @@ const Index = () => {
         {!timeInfo.isSchoolDay ? (
           <div className="col-span-full glass-card p-10 text-center animate-scale-in">
             <h2 className="text-2xl font-bold timer-text enloe-gradient-text mb-2">Weekend</h2>
-            <p className="text-gray-600 dark:text-gray-400">No school today. Enjoy your day!</p>
+            <p className="text-gray-600 dark:text-gray-400">
+              {weekend ? "No school today. See you on Monday!" : "No school today. Enjoy your day!"}
+            </p>
           </div>
         ) : schoolOver ? (
           <div className="col-span-full glass-card p-10 text-center animate-scale-in">

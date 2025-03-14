@@ -1,3 +1,4 @@
+
 import { Period, Schedule, TimeInfo } from "@/types/schedule";
 
 // Convert a time string (HH:MM) to milliseconds since midnight
@@ -40,6 +41,13 @@ export const isSchoolDay = (): boolean => {
   const now = new Date();
   const day = now.getDay();
   return day >= 1 && day <= 5;
+};
+
+// Check if it's the weekend (Saturday or Sunday)
+export const isWeekend = (): boolean => {
+  const now = new Date();
+  const day = now.getDay();
+  return day === 0 || day === 6;
 };
 
 // Get current time information based on the schedule
