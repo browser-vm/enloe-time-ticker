@@ -26,6 +26,11 @@ serve(async (req) => {
 
     const OPENWEATHERMAP_API_KEY = Deno.env.get('OPENWEATHERMAP_API_KEY');
     
+    if (!OPENWEATHERMAP_API_KEY) {
+      console.error("Missing OpenWeatherMap API key");
+      throw new Error("Weather API key is not configured");
+    }
+    
     console.log(`Fetching weather data for coordinates: ${lat}, ${lon}`);
     
     // Fetch weather data
@@ -41,6 +46,7 @@ serve(async (req) => {
     }
 
     const weatherData = await weatherResponse.json();
+    console.log("Weather API response:", weatherData);
     
     // Format the response to match the WeatherData interface expected by the client
     const formattedData = {
@@ -53,6 +59,8 @@ serve(async (req) => {
       icon: weatherData.weather[0].icon,
       wind_speed: weatherData.wind?.speed || 0
     };
+
+    console.log("Formatted weather data:", formattedData);
 
     // Return the weather data
     return new Response(

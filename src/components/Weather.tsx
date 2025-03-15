@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import { Cloud, CloudDrizzle, CloudFog, CloudLightning, CloudRain, CloudSnow, Sun, Wind } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { cn } from '@/lib/utils';
+import { toast } from '@/components/ui/use-toast';
 
 interface WeatherData {
   temp: number;
@@ -34,9 +35,16 @@ const Weather = ({ className }: { className?: string }) => {
           body: { lat: RALEIGH_LAT, lon: RALEIGH_LON }
         });
         
+        console.log('Weather API response:', data, apiError);
+        
         if (apiError) {
           console.error('Error fetching weather:', apiError);
           setError('Could not load weather data');
+          toast({
+            title: "Weather Data Error",
+            description: "Unable to load weather information",
+            variant: "destructive"
+          });
           setLoading(false);
           return;
         }
