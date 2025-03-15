@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { 
   getCurrentTimeInfo, 
@@ -14,7 +13,6 @@ import TimeCard from "@/components/TimeCard";
 import ScheduleToggle from "@/components/ScheduleToggle";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import Weather from "@/components/Weather";
-import { BotpressChat } from "@/components/BotpressChat";
 import LinesOfCodeCounter from "@/components/LinesOfCodeCounter";
 import { Clock, Calendar, School, Coffee } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -214,9 +212,6 @@ const Index = () => {
           </div>
         </div>
       </footer>
-      
-      {/* Add the Botpress chat component */}
-      <BotpressChat botId="0139ac8c-6eaf-4e39-9c1e-d42bacc3266f" />
     </div>
   );
 };
