@@ -1,7 +1,7 @@
 
 import { useState, useEffect } from 'react';
 import { Cloud, CloudDrizzle, CloudFog, CloudLightning, CloudRain, CloudSnow, Sun, Wind } from 'lucide-react';
-import { supabaseClient } from '@/integrations/supabase/client';
+import { supabase } from '@/integrations/supabase/client';
 import { cn } from '@/lib/utils';
 
 interface WeatherData {
@@ -30,7 +30,7 @@ const Weather = ({ className }: { className?: string }) => {
         setLoading(true);
         setError(null);
         
-        const { data, error: apiError } = await supabaseClient.functions.invoke('get-weather', {
+        const { data, error: apiError } = await supabase.functions.invoke('get-weather', {
           body: { lat: RALEIGH_LAT, lon: RALEIGH_LON }
         });
         

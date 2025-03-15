@@ -42,11 +42,16 @@ serve(async (req) => {
 
     const weatherData = await weatherResponse.json();
     
-    // Format the response
+    // Format the response to match the WeatherData interface expected by the client
     const formattedData = {
-      temp: Math.round(weatherData.main.temp),
-      condition: weatherData.weather[0].main,
-      icon: weatherData.weather[0].icon
+      temp: weatherData.main.temp,
+      feels_like: weatherData.main.feels_like,
+      temp_min: weatherData.main.temp_min,
+      temp_max: weatherData.main.temp_max,
+      humidity: weatherData.main.humidity,
+      description: weatherData.weather[0].description,
+      icon: weatherData.weather[0].icon,
+      wind_speed: weatherData.wind?.speed || 0
     };
 
     // Return the weather data
