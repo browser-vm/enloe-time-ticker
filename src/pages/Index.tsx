@@ -216,7 +216,7 @@ const Index = () => {
       </footer>
       
       {/* Add the Botpress chat component */}
-      <BotpressChat botId="0aa89642-2acc-4f0b-a938-0ea2be4ebc96" />
+      <BotpressChat botId="0139ac8c-6eaf-4e39-9c1e-d42bacc3266f" />
     </div>
   );
 };
