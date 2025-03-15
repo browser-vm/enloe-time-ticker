@@ -1,128 +1,135 @@
 
-import { useState, useEffect } from "react";
-import { Sun, Cloud, CloudRain, CloudSnow, Wind, CloudLightning, AlertCircle } from "lucide-react";
-import { cn } from "@/lib/utils";
-import { useToast } from "@/hooks/use-toast";
-import { supabase } from "@/integrations/supabase/client";
+import { useState, useEffect } from 'react';
+import { Cloud, CloudDrizzle, CloudFog, CloudLightning, CloudRain, CloudSnow, Sun, Wind } from 'lucide-react';
+import { supabaseClient } from '@/integrations/supabase/client';
+import { cn } from '@/lib/utils';
 
 interface WeatherData {
   temp: number;
-  condition: string;
+  feels_like: number;
+  temp_min: number;
+  temp_max: number;
+  humidity: number;
+  description: string;
   icon: string;
+  wind_speed: number;
 }
 
-interface WeatherProps {
-  className?: string;
-}
+// Raleigh coordinates
+const RALEIGH_LAT = 35.7796;
+const RALEIGH_LON = -78.6382;
 
-const Weather = ({ className }: WeatherProps) => {
+const Weather = ({ className }: { className?: string }) => {
   const [weather, setWeather] = useState<WeatherData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const { toast } = useToast();
 
   useEffect(() => {
     const fetchWeather = async () => {
       try {
         setLoading(true);
-        // Raleigh coordinates (approximate Enloe location)
-        const lat = 35.7796;
-        const lon = -78.6382;
+        setError(null);
         
-        // Mock weather data as fallback
-        const mockWeatherData = {
-          temp: 72,
-          condition: "Clear",
-          icon: "01d"
-        };
+        const { data, error: apiError } = await supabaseClient.functions.invoke('get-weather', {
+          body: { lat: RALEIGH_LAT, lon: RALEIGH_LON }
+        });
         
-        try {
-          // Create an AbortController for timeout functionality
-          const controller = new AbortController();
-          const timeoutId = setTimeout(() => controller.abort(), 8000);
-          
-          // Call our Supabase Edge Function
-          const { data, error } = await supabase.functions.invoke('get-weather', {
-            body: { lat, lon },
-          });
-          
-          // Clear the timeout since fetch completed
-          clearTimeout(timeoutId);
-          
-          if (error) {
-            console.error("Supabase function error:", error);
-            throw new Error("Weather data not available");
-          }
-          
-          // Set weather data from the Edge Function response
-          setWeather(data);
-        } catch (apiError) {
-          console.error("Weather API Error, using mock data:", apiError);
-          // Use mock data instead of failing
-          setWeather(mockWeatherData);
-          toast({
-            title: "Weather Notice",
-            description: "Using cached weather data. Will try again later.",
-            variant: "default",
-          });
+        if (apiError) {
+          console.error('Error fetching weather:', apiError);
+          setError('Could not load weather data');
+          setLoading(false);
+          return;
+        }
+        
+        if (data && typeof data === 'object') {
+          setWeather(data as WeatherData);
+        } else {
+          console.error('Invalid weather data format:', data);
+          setError('Weather data format error');
         }
       } catch (err) {
-        console.error("Error in weather component:", err);
-        setError("Weather unavailable");
-        toast({
-          title: "Weather Error",
-          description: "Unable to load weather data. Using default values.",
-          variant: "destructive",
-        });
+        console.error('Weather fetch error:', err);
+        setError('Failed to fetch weather');
       } finally {
         setLoading(false);
       }
     };
 
     fetchWeather();
+    
     // Refresh weather every 30 minutes
     const interval = setInterval(fetchWeather, 30 * 60 * 1000);
     
     return () => clearInterval(interval);
-  }, [toast]);
+  }, []);
 
-  const getWeatherIcon = () => {
-    if (!weather) return <Sun className="h-5 w-5" />;
+  // Weather icon mapping function with error handling
+  const getWeatherIcon = (description: string | undefined) => {
+    if (!description) return <Cloud className="h-4 w-4" />;
     
-    const condition = weather.condition.toLowerCase();
-    if (condition.includes("clear")) return <Sun className="h-5 w-5" />;
-    if (condition.includes("cloud")) return <Cloud className="h-5 w-5" />;
-    if (condition.includes("rain")) return <CloudRain className="h-5 w-5" />;
-    if (condition.includes("snow")) return <CloudSnow className="h-5 w-5" />;
-    if (condition.includes("thunder")) return <CloudLightning className="h-5 w-5" />;
-    if (condition.includes("wind") || condition.includes("mist")) return <Wind className="h-5 w-5" />;
+    const desc = description.toLowerCase();
     
-    return <Sun className="h-5 w-5" />;
+    if (desc.includes('thunderstorm') || desc.includes('lightning')) {
+      return <CloudLightning className="h-4 w-4" />;
+    } else if (desc.includes('drizzle')) {
+      return <CloudDrizzle className="h-4 w-4" />;
+    } else if (desc.includes('rain')) {
+      return <CloudRain className="h-4 w-4" />;
+    } else if (desc.includes('snow')) {
+      return <CloudSnow className="h-4 w-4" />;
+    } else if (desc.includes('fog') || desc.includes('mist')) {
+      return <CloudFog className="h-4 w-4" />;
+    } else if (desc.includes('cloud')) {
+      return <Cloud className="h-4 w-4" />;
+    } else if (desc.includes('clear') || desc.includes('sun')) {
+      return <Sun className="h-4 w-4" />;
+    } else if (desc.includes('wind')) {
+      return <Wind className="h-4 w-4" />;
+    } else {
+      return <Cloud className="h-4 w-4" />;
+    }
+  };
+
+  // Function to format temperature
+  const formatTemp = (temp: number) => {
+    return `${Math.round(temp)}°F`;
   };
 
   if (loading) {
     return (
-      <div className={cn("flex items-center text-enloe-green dark:text-enloe-yellow", className)}>
-        <span className="text-sm">Loading weather...</span>
+      <div className={cn("flex items-center text-xs", className)}>
+        <div className="animate-pulse flex space-x-1 items-center">
+          <div className="h-4 w-4 bg-gray-200 dark:bg-gray-700 rounded-full"></div>
+          <div className="h-3 w-16 bg-gray-200 dark:bg-gray-700 rounded"></div>
+        </div>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className={cn("flex items-center text-enloe-green dark:text-enloe-yellow", className)}>
-        <AlertCircle className="h-5 w-5 mr-1" />
-        <span className="text-sm">{error}</span>
+      <div className={cn("flex items-center text-xs text-gray-500 dark:text-gray-400", className)}>
+        <Cloud className="h-4 w-4 mr-1" />
+        <span>Weather unavailable</span>
+      </div>
+    );
+  }
+
+  // Add fallback if weather data is missing
+  if (!weather) {
+    return (
+      <div className={cn("flex items-center text-xs text-gray-500 dark:text-gray-400", className)}>
+        <Cloud className="h-4 w-4 mr-1" />
+        <span>Weather data missing</span>
       </div>
     );
   }
 
   return (
-    <div className={cn("flex items-center text-enloe-green dark:text-enloe-yellow", className)}>
-      {getWeatherIcon()}
-      <span className="text-sm font-medium ml-1">
-        {weather?.temp}°F {weather?.condition}
-      </span>
+    <div className={cn("flex items-center text-xs", className)}>
+      {getWeatherIcon(weather.description)}
+      <span className="ml-1 font-medium">{formatTemp(weather.temp)}</span>
+      <span className="text-gray-500 dark:text-gray-400 ml-1">{weather.description}</span>
     </div>
   );
 };
