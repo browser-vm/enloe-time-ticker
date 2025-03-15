@@ -9,7 +9,7 @@ const LinesOfCodeCounter = ({ className }: { className?: string }) => {
   useEffect(() => {
     // This is a simulated count that would normally come from an API
     // In a real app, you would fetch this from your backend
-    const simulatedCount = 6954; // Example count
+    const simulatedCount = 6872; // Example count
     
     // Simulate loading delay
     const timer = setTimeout(() => {
