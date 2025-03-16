@@ -46,7 +46,13 @@ serve(async (req) => {
     }
 
     const weatherData = await weatherResponse.json();
-    console.log("Weather API response:", weatherData);
+    console.log("Weather API response:", JSON.stringify(weatherData, null, 2));
+    
+    // Ensure weather data has the required properties
+    if (!weatherData.main || !weatherData.weather || weatherData.weather.length === 0) {
+      console.error("Invalid weather data structure:", weatherData);
+      throw new Error("Invalid weather data structure received from API");
+    }
     
     // Format the response to match the WeatherData interface expected by the client
     const formattedData = {
@@ -60,12 +66,17 @@ serve(async (req) => {
       wind_speed: weatherData.wind?.speed || 0
     };
 
-    console.log("Formatted weather data:", formattedData);
+    console.log("Formatted weather data:", JSON.stringify(formattedData, null, 2));
 
-    // Return the weather data
+    // Return the weather data with proper content type
     return new Response(
       JSON.stringify(formattedData),
-      { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      { 
+        headers: { 
+          ...corsHeaders, 
+          'Content-Type': 'application/json' 
+        } 
+      }
     );
   } catch (error) {
     console.error(`Error in get-weather function:`, error);

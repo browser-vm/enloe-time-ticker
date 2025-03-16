@@ -50,14 +50,25 @@ const Weather = ({ className }: { className?: string }) => {
         }
         
         if (data && typeof data === 'object') {
+          console.log('Setting weather data:', data);
           setWeather(data as WeatherData);
         } else {
           console.error('Invalid weather data format:', data);
           setError('Weather data format error');
+          toast({
+            title: "Weather Data Error",
+            description: "Received invalid weather data format",
+            variant: "destructive"
+          });
         }
       } catch (err) {
         console.error('Weather fetch error:', err);
         setError('Failed to fetch weather');
+        toast({
+          title: "Weather Error",
+          description: "Failed to fetch weather data",
+          variant: "destructive"
+        });
       } finally {
         setLoading(false);
       }
