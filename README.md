@@ -1,4 +1,5 @@
 # Enloe Time
+![GitHub repo size](https://img.shields.io/github/repo-size/browser-vm/enloe-time-ticker) ![lines of Code](https://img.shields.io/badge/lines_of_code-6%2C872-blue)
 
 Below are instructions to run it on your own server.
 
